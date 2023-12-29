@@ -3,10 +3,9 @@
  * main app router
  **/
 import { publicProcedure, router } from "../trpc";
+import { authCallbackRoute } from "./authCallbackRoute";
 export const appRouter = router({
-  test: publicProcedure.query(() => {
-    return "Hello";
-  }),
+  authCallback: publicProcedure.query(authCallbackRoute),
 });
 // Export type router type signature,
 // NOT the router itself.
