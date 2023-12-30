@@ -11,9 +11,22 @@ import { useState } from "react";
 
 const Dashboard = () => {
   const { data: files, isLoading } = trpc.getUserFiles.useQuery();
+  const utils = trpc.useUtils();
   const [currentlyDeletingFile, setCurrentlyDeletingFile] = useState<
     string | null
   >(null);
+
+  const { mutate: deleteFile } = trpc.deleteFile.useMutation({
+    onSuccess: () => {
+      utils.getUserFiles.invalidate();
+    },
+    onMutate({ id }) {
+      setCurrentlyDeletingFile(id);
+    },
+    onSettled() {
+      setCurrentlyDeletingFile(null);
+    },
+  });
 
   return (
     <main className="mx-auto max-w-7xl md:p-10">
@@ -63,7 +76,7 @@ const Dashboard = () => {
                   </div>
 
                   <Button
-                    //onClick={() => deleteFile({ id: file.id })}
+                    onClick={() => deleteFile({ id: file.id })}
                     size="sm"
                     className="w-full"
                     variant="destructive"
