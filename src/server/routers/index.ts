@@ -7,10 +7,14 @@ import { z } from "zod";
 import { authCallbackRoute } from "./authCallbackRoute";
 import { deleteFileRoute } from "./deleteFileRoute";
 import { getUserFilesRoute } from "./getUserFilesRoute";
+import { getFileRoute } from "./getFileRoute";
 
 export const appRouter = router({
   authCallback: publicProcedure.query(authCallbackRoute),
   getUserFiles: privateProcedure.query(getUserFilesRoute),
+  getFile: privateProcedure
+    .input(z.object({ key: z.string() }))
+    .mutation(getFileRoute),
   deleteFile: privateProcedure
     .input(z.object({ id: z.string() }))
     .mutation(deleteFileRoute),
